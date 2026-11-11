@@ -4,6 +4,9 @@ analyzer:
   exclude:
     - '**/*.g.dart'
     - '**/*.freezed.dart'
+    - build/**
+    - android/**
+    - ios/**
 linter:
   rules:
     # REASON: this is an app, not a published package; nobody consumes our public API, so doc comments on every member add noise.

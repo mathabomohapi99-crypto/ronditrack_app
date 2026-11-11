@@ -52,8 +52,8 @@ flutter {
 android {
     flavorDimensions += "env"
     productFlavors {
-        create("dev") { dimension = "env"; applicationIdSuffix = ".dev"; manifestPlaceholders["appName"] = "RondiTrack Dev" }
-        create("staging") { dimension = "env"; applicationIdSuffix = ".staging"; manifestPlaceholders["appName"] = "RondiTrack Staging" }
-        create("prod") { dimension = "env"; manifestPlaceholders["appName"] = "RondiTrack" }
+        create("dev") { dimension = "env"; applicationIdSuffix = ".dev"; manifestPlaceholders["appName"] = "RondiTrack Dev"; manifestPlaceholders["deepLinkScheme"] = "ronditrack-dev" }
+        create("staging") { dimension = "env"; applicationIdSuffix = ".staging"; manifestPlaceholders["appName"] = "RondiTrack Staging"; manifestPlaceholders["deepLinkScheme"] = "ronditrack-staging" }
+        create("prod") { dimension = "env"; manifestPlaceholders["appName"] = "RondiTrack"; manifestPlaceholders["deepLinkScheme"] = "ronditrack" }
     }
 }
