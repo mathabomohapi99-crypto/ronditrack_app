@@ -1,0 +1,11 @@
+# NEW: very_good_analysis + riverpod_lint (only dart analyze runs plugins, not flutter analyze)
+include: package:very_good_analysis/analysis_options.yaml
+analyzer:
+  exclude:
+    - '**/*.g.dart'
+    - '**/*.freezed.dart'
+    - build/**
+    - android/**
+    - ios/**
+plugins:
+  riverpod_lint: 3.1.9
