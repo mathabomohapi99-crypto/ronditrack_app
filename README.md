@@ -1,3 +1,5 @@
+> STATUS: Parts 1-6 code complete, 17 tests passing (money, config refusals, domain, actions, family provider, frame test, Home states). Not done: green CI with strict-lint cleanup (dart analyze --fatal-infos still reports doc/line-length infos), red-CI proof PR, emulator screenshots, screen recording, 3-flavour launcher screenshot, contract copy, README FILL/VERIFY placeholders.
+
 # RondiTrack Mobile (Assignment 10.1)
 
 ## Contract notes
