@@ -1,11 +1,21 @@
-# NEW: very_good_analysis + riverpod_lint (only dart analyze runs plugins, not flutter analyze)
+# Strict lints (very_good_analysis) plus riverpod_lint. Only dart analyze runs the plugin, not flutter analyze.
 include: package:very_good_analysis/analysis_options.yaml
 analyzer:
   exclude:
     - '**/*.g.dart'
     - '**/*.freezed.dart'
-    - build/**
-    - android/**
-    - ios/**
+linter:
+  rules:
+    # REASON: this is an app, not a published package; nobody consumes our public API, so doc comments on every member add noise.
+    public_member_api_docs: false
+    # REASON: one-line "why I changed this" comments are required by the course and exceed 80 characters; dart format handles code.
+    lines_longer_than_80_chars: false
+    # REASON: pubspec order follows the add order used in the README; sorting is cosmetic.
+    sort_pub_dependencies: false
+    # REASON: tests and Riverpod notifiers read clearer with a plain method (select) and separate calls than with a setter or cascade.
+    use_setters_to_change_properties: false
+    cascade_invocations: false
+    # REASON: AppConfig.fromValues is a pure function that a unit test calls; a static method keeps the refusal logic testable.
+    prefer_constructors_over_static_methods: false
 plugins:
   riverpod_lint: 3.1.9
