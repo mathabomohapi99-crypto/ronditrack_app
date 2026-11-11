@@ -1,4 +1,4 @@
-> STATUS: Parts 1-6 code complete, 17 tests passing (money, config refusals, domain, actions, family provider, frame test, Home states). Not done: green CI with strict-lint cleanup (dart analyze --fatal-infos still reports doc/line-length infos), red-CI proof PR, emulator screenshots, screen recording, 3-flavour launcher screenshot, contract copy, README FILL/VERIFY placeholders.
+> STATUS: Parts 1-6 code complete, 17 tests passing (money, config refusals, domain, actions, family provider, frame test, Home states). Not done: red-CI proof PR, emulator screenshots, screen recording, 3-flavour launcher screenshot, contract copy, README FILL/VERIFY placeholders.
 
 # RondiTrack Mobile (Assignment 10.1)
 
@@ -36,3 +36,4 @@ Cents is an extension type over int; formatter and parser use integer maths only
 | stokvelDetail(id) | one stokvel + contributions | autoDispose | Holds the most data; disposing frees memory/data on cheap phones; cost is a refetch. |
 Sign-out (Week 11): invalidate every keepAlive provider (`ref.invalidate(...)`) or recreate the root ProviderContainer on sign-out, so the next person on a shared phone sees nothing of the previous one.
 Disposal evidence: <screenshot of Run console "stokvelDetail disposed id=...">.
+
