@@ -1,4 +1,4 @@
-// NEW: view-state mapping, family provider isolation/sharing, and the "never the wrong stokvel" frame test
+// UPDATED 10.2: 10.1 state tests kept; the old one-frame widget test moved to test/router/router_test.dart (picker is now an address)
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -11,7 +11,6 @@ import 'package:ronditrack/features/stokvels/data/fake_repositories.dart';
 import 'package:ronditrack/features/stokvels/domain/enums.dart';
 import 'package:ronditrack/features/stokvels/domain/models.dart';
 import 'package:ronditrack/features/stokvels/domain/repositories.dart';
-import 'package:ronditrack/features/stokvels/presentation/detail_page.dart';
 import 'package:ronditrack/features/stokvels/presentation/home_page.dart';
 import 'package:ronditrack/features/stokvels/presentation/providers.dart';
 
@@ -36,7 +35,7 @@ StokvelDetail _d(String id, String who) => StokvelDetail(
 );
 
 class _Repo implements StokvelRepository {
-  new(this.b);
+  _Repo(this.b);
   final Completer<StokvelDetail> b;
   int calls = 0;
   @override
@@ -85,38 +84,6 @@ void main() {
       expect(c.read(stokvelDetailProvider('A')).hasValue, isTrue);
     },
   );
-
-  testWidgets('frame test: after switching, B loading and none of A', (
-    tester,
-  ) async {
-    final b = Completer<StokvelDetail>();
-    await tester.pumpWidget(
-      ProviderScope(
-        retry: (_, _) => null,
-        overrides: [stokvelRepositoryProvider.overrideWithValue(_Repo(b))],
-        child: const MaterialApp(
-          home: StokvelDetailPage(
-            initialId: 'A',
-            choices: [
-              (id: 'A', name: 'Stokvel A'),
-              (id: 'B', name: 'Stokvel B'),
-            ],
-          ),
-        ),
-      ),
-    );
-    await tester.pumpAndSettle();
-    expect(find.text('A-member'), findsOneWidget);
-    await tester.tap(find.byKey(const Key('picker')));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('Stokvel B').last);
-    await tester.pump(); // exactly one frame
-    expect(find.byKey(const Key('loading')), findsOneWidget);
-    expect(find.text('A-member'), findsNothing);
-    b.complete(_d('B', 'B-member'));
-    await tester.pumpAndSettle();
-    expect(find.text('B-member'), findsOneWidget);
-  });
 
   testWidgets('Home: empty persona', (tester) async {
     await tester.pumpWidget(

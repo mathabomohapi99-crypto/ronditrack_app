@@ -61,6 +61,7 @@ StokvelDetail _ubuntu(StokvelRole role, String me) => StokvelDetail(
   name: 'Ubuntu Savers',
   role: role,
   cycle: CycleInfo(
+    id: 'ubuntu-cycle-3',
     number: 3,
     status: CycleStatus.open,
     dueDate: DateTime(2026, 11, 30),
@@ -77,6 +78,7 @@ StokvelDetail _grocery(StokvelRole role, String me) => StokvelDetail(
   name: 'Festive Grocery Club',
   role: role,
   cycle: CycleInfo(
+    id: 'grocery-cycle-2',
     number: 2,
     status: CycleStatus.open,
     dueDate: DateTime(2026, 11, 14),

@@ -27,6 +27,7 @@ abstract class HomeEntry with _$HomeEntry {
 @freezed
 abstract class CycleInfo with _$CycleInfo {
   const factory({
+    @Default('') String id,
     required int number,
     required CycleStatus status,
     required DateTime dueDate,
