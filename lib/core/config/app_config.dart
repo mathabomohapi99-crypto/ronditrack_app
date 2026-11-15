@@ -1,4 +1,4 @@
-// NEW: reads --dart-define-from-file values; refuses to start without config or when native flavour != config flavour
+// UPDATED 10.3: same as 10.2 plus isDev, so dev-only code can ask "am I the dev flavour?"
 import 'package:flutter/services.dart' show appFlavor;
 
 class ConfigError implements Exception {
@@ -12,6 +12,9 @@ class AppConfig {
   const new({required this.flavor, required this.apiBaseUrl});
   final String flavor;
   final String apiBaseUrl;
+
+  // Only the dev flavour may contain dev-only tools (the persona switcher)
+  bool get isDev => flavor == 'dev';
 
   // Pure function so a unit test can prove both refusals
   static AppConfig fromValues({

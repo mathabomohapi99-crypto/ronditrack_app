@@ -1,5 +1,7 @@
-// NEW: the ONLY file Week 11 changes: one provider per repository names the implementation
+// UPDATED 10.3: the ONLY file Week 11 changes: one provider per repository names the implementation (payouts added)
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:ronditrack/features/payouts/data/fake_payout_repository.dart';
+import 'package:ronditrack/features/payouts/domain/payout_repository.dart';
 import 'package:ronditrack/features/stokvels/data/fake_repositories.dart';
 import 'package:ronditrack/features/stokvels/domain/enums.dart';
 import 'package:ronditrack/features/stokvels/domain/repositories.dart';
@@ -21,3 +23,7 @@ HomeRepository homeRepository(Ref ref) =>
 @Riverpod(keepAlive: true)
 StokvelRepository stokvelRepository(Ref ref) =>
     FakeStokvelRepository(persona: ref.watch(currentPersonaProvider));
+
+@Riverpod(keepAlive: true)
+PayoutRepository payoutRepository(Ref ref) =>
+    FakePayoutRepository(persona: ref.watch(currentPersonaProvider));
