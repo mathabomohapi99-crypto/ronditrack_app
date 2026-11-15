@@ -7,6 +7,7 @@ import 'package:ronditrack/app/redirect.dart';
 import 'package:ronditrack/features/activity/activity_page.dart';
 import 'package:ronditrack/features/auth/auth_provider.dart';
 import 'package:ronditrack/features/auth/sign_in_page.dart';
+import 'package:ronditrack/features/payouts/presentation/payouts_page.dart';
 import 'package:ronditrack/features/profile/profile_page.dart';
 import 'package:ronditrack/features/stokvels/domain/enums.dart';
 import 'package:ronditrack/features/stokvels/presentation/cycle_page.dart';
@@ -39,7 +40,13 @@ part 'router.g.dart';
             TypedGoRoute<StokvelRoute>(
               path: ':id',
               routes: <TypedRoute<RouteData>>[
-                TypedGoRoute<CycleRoute>(path: 'cycles/:cycleId'),
+                TypedGoRoute<CycleRoute>(
+                  path: 'cycles/:cycleId',
+                  routes: <TypedRoute<RouteData>>[
+                    // payouts sit UNDER their cycle, so back goes to the cycle (also from a cold start)
+                    TypedGoRoute<PayoutsRoute>(path: 'payouts'),
+                  ],
+                ),
               ],
             ),
           ],
@@ -120,6 +127,15 @@ class CycleRoute extends GoRouteData with $CycleRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       CyclePage(stokvelId: id, cycleId: cycleId);
+}
+
+class PayoutsRoute extends GoRouteData with $PayoutsRoute {
+  const PayoutsRoute({required this.id, required this.cycleId});
+  final String id;
+  final String cycleId;
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      PayoutsPage(stokvelId: id, cycleId: cycleId);
 }
 
 class ActivityRoute extends GoRouteData with $ActivityRoute {

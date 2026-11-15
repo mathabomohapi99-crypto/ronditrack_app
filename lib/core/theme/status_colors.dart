@@ -1,5 +1,6 @@
-// NEW 10.2: theme extension with status tokens Material does not have; each has a light AND a dark pair
+// UPDATED 10.3: theme extension with status tokens Material does not have; each has a light AND a dark pair. NEW: payoutNext + forPayout
 import 'package:flutter/material.dart';
+import 'package:ronditrack/features/payouts/domain/payout_status.dart';
 import 'package:ronditrack/features/stokvels/domain/enums.dart';
 
 @immutable
@@ -25,6 +26,7 @@ class StatusColors extends ThemeExtension<StatusColors> {
     required this.closed,
     required this.paidOut,
     required this.arrears,
+    required this.payoutNext,
   });
 
   final Tone pending;
@@ -35,6 +37,7 @@ class StatusColors extends ThemeExtension<StatusColors> {
   final Tone closed;
   final Tone paidOut;
   final Tone arrears;
+  final Tone payoutNext;
 
   // LIGHT
   static const light = StatusColors(
@@ -46,6 +49,7 @@ class StatusColors extends ThemeExtension<StatusColors> {
     closed: Tone(Color(0xFF3E2723), Color(0xFFD7CCC8)),
     paidOut: Tone(Color(0xFF4A148C), Color(0xFFE1BEE7)),
     arrears: Tone(Color(0xFF9B1C1C), Color(0xFFFFCDD2)),
+    payoutNext: Tone(Color(0xFF7A2E00), Color(0xFFFFE0B2)),
   );
 
   // DARK
@@ -58,6 +62,7 @@ class StatusColors extends ThemeExtension<StatusColors> {
     closed: Tone(Color(0xFFD7CCC8), Color(0xFF3E2F2B)),
     paidOut: Tone(Color(0xFFCE93D8), Color(0xFF3B1F5C)),
     arrears: Tone(Color(0xFFFFB4A9), Color(0xFF5C1A1A)),
+    payoutNext: Tone(Color(0xFFFFCC80), Color(0xFF5A2A00)),
   );
 
   // Exhaustive: a new status is a compile error here until it gets a colour
@@ -75,6 +80,14 @@ class StatusColors extends ThemeExtension<StatusColors> {
     CycleStatus.unknown => unknown,
   };
 
+  // Paid reuses the "confirmed" pair (done), Waiting reuses "pending" (not yet): same meaning, already measured
+  Tone forPayout(PayoutStatus s) => switch (s) {
+    PayoutStatus.paid => confirmed,
+    PayoutStatus.next => payoutNext,
+    PayoutStatus.waiting => pending,
+    PayoutStatus.unknown => unknown,
+  };
+
   @override
   StatusColors copyWith({
     Tone? pending,
@@ -85,6 +98,7 @@ class StatusColors extends ThemeExtension<StatusColors> {
     Tone? closed,
     Tone? paidOut,
     Tone? arrears,
+    Tone? payoutNext,
   }) => StatusColors(
     pending: pending ?? this.pending,
     paid: paid ?? this.paid,
@@ -94,6 +108,7 @@ class StatusColors extends ThemeExtension<StatusColors> {
     closed: closed ?? this.closed,
     paidOut: paidOut ?? this.paidOut,
     arrears: arrears ?? this.arrears,
+    payoutNext: payoutNext ?? this.payoutNext,
   );
 
   @override
@@ -108,6 +123,7 @@ class StatusColors extends ThemeExtension<StatusColors> {
       closed: Tone.lerp(closed, other.closed, t),
       paidOut: Tone.lerp(paidOut, other.paidOut, t),
       arrears: Tone.lerp(arrears, other.arrears, t),
+      payoutNext: Tone.lerp(payoutNext, other.payoutNext, t),
     );
   }
 }

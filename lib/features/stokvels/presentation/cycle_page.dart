@@ -1,6 +1,7 @@
 // NEW 10.2: a cycle under its stokvel; a cycle from ANOTHER stokvel is "not found" just like a missing one
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:ronditrack/app/router.dart';
 import 'package:ronditrack/core/money/money_format.dart';
 import 'package:ronditrack/core/theme/status_chip.dart';
 import 'package:ronditrack/core/theme/status_colors.dart';
@@ -65,6 +66,15 @@ class _CycleBody extends StatelessWidget {
         children: [
           Text(detail.name, style: Theme.of(context).textTheme.titleMedium),
           Text('Due ${formatDate(cycle.dueDate)}'),
+          const SizedBox(height: 8),
+          OutlinedButton(
+            key: const Key('payoutsButton'),
+            onPressed: () => PayoutsRoute(
+              id: detail.stokvelId,
+              cycleId: cycle.id,
+            ).go(context),
+            child: const Text('Rotation and payouts'),
+          ),
           const SizedBox(height: 8),
           Align(
             alignment: Alignment.centerLeft,
