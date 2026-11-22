@@ -1,4 +1,4 @@
-package za.co.andiswa.ronditrack
+package za.co.mathabo.ronditrack
 
 import io.flutter.embedding.android.FlutterActivity
 

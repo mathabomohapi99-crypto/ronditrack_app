@@ -5,6 +5,7 @@ import 'package:ronditrack/app/redirect.dart';
 import 'package:ronditrack/app/shell.dart';
 import 'package:ronditrack/features/activity/presentation/activity_screen.dart';
 import 'package:ronditrack/features/auth/presentation/sign_in_screen.dart';
+import 'package:ronditrack/features/auth/presentation/splash_screen.dart';
 import 'package:ronditrack/features/home/presentation/home_screen.dart';
 import 'package:ronditrack/features/join/presentation/join_screen.dart';
 import 'package:ronditrack/features/payout/presentation/payouts_screen.dart';
@@ -18,16 +19,31 @@ part 'routes.g.dart';
 /// Builds the router. The redirect is the pure function in redirect.dart.
 GoRouter createRouter({
   required bool Function() isSignedIn,
+  bool Function()? isRestoring,
   Listenable? refreshListenable,
   String initialLocation = '/',
 }) => GoRouter(
   initialLocation: initialLocation,
   refreshListenable: refreshListenable,
   routes: $appRoutes,
-  redirect: (context, state) =>
-      redirectFor(signedIn: isSignedIn(), location: state.uri),
+  redirect: (context, state) => redirectFor(
+    signedIn: isSignedIn(),
+    restoring: isRestoring?.call() ?? false,
+    location: state.uri,
+  ),
   errorBuilder: (context, state) => const NotFoundScreen(),
 );
+
+@TypedGoRoute<SplashRoute>(path: '/splash')
+class SplashRoute extends GoRouteData with $SplashRoute {
+  const new({this.from});
+
+  final String? from;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const SplashScreen();
+}
 
 @TypedGoRoute<SignInRoute>(path: '/sign-in')
 class SignInRoute extends GoRouteData with $SignInRoute {

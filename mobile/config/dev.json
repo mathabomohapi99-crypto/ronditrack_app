@@ -1,5 +1,6 @@
 {
-  "FLAVOR": "dev",
-  "API_BASE_URL": "http://10.0.2.2:5051",
-  "USE_API": "true"
+    "FLAVOR":  "dev",
+    "API_BASE_URL":  "http://10.0.2.2:5051",
+    "USE_API":  "true",
+    "REFRESH_COOKIE_NAME":  "refresh_token"
 }

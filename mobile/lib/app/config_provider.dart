@@ -7,5 +7,8 @@ part 'config_provider.g.dart';
 /// real config. The fallback is prod, so a forgotten override can never switch
 /// dev-only tools on.
 @Riverpod(keepAlive: true)
-AppConfig appConfig(Ref ref) =>
-    const AppConfig(flavor: Flavor.prod, apiBaseUrl: 'https://invalid.example');
+AppConfig appConfig(Ref ref) => const AppConfig(
+  flavor: Flavor.prod,
+  apiBaseUrl: 'https://invalid.example',
+  refreshCookieName: 'unset',
+);

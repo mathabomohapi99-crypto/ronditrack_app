@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ronditrack/core/session/session.dart';
+import 'package:ronditrack/features/auth/application/auth_flow.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const new({super.key});
@@ -22,7 +23,7 @@ class ProfileScreen extends ConsumerWidget {
             Text(name, style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 16),
             FilledButton(
-              onPressed: () => ref.read(authProvider.notifier).signOut(),
+              onPressed: () => ref.read(authFlowProvider.notifier).signOut(),
               child: const Text('Sign out'),
             ),
           ],

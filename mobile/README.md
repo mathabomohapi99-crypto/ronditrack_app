@@ -78,15 +78,6 @@ Disposal proof: `test/stokvel/stokvel_detail_provider_test.dart` shows the id's 
 
 **Sign-out.** Sign-out will rebuild the root `ProviderScope` with a new key, which disposes every provider including the kept-alive ones (session, repositories, any cached data), so nothing survives into the next person's session on a shared phone. Sign-out will also clear the stored token first and invalidate `currentPersona` so a failed scope rebuild cannot leave an identity behind.
 
-## CI catches a lint
-
-To prove CI catches what only `riverpod_lint` reports, pull request #3 (`ci-demo-lint`) adds a public field on a notifier. The rule is `avoid_public_notifier_properties`.
-
-- Red run: https://github.com/AndiswaMbonambi08/RondiTrack-Flutter/actions/runs/42940795867 (fails on the Analyze step, Test is skipped)
-- Green run after the fix: https://github.com/AndiswaMbonambi08/RondiTrack-Flutter/actions/runs/42941090417
-- Pull request: https://github.com/AndiswaMbonambi08/RondiTrack-Flutter/pull/3
-
-`flutter analyze` alone would have let it through. It does not load analyser plugins, so `riverpod_lint` never runs under it. Only `dart analyze` loads the plugin, which is why CI runs `dart analyze --fatal-infos`.
 
 ## Routes
 
@@ -122,40 +113,40 @@ One pure function, `redirectFor(signedIn, location)` in `lib/app/redirect.dart`,
 
 **Choice: a custom scheme**, `ronditrack://<applicationId>/<path>`. The host is the flavour's own application id, filled in by Gradle (`${applicationId}`) in the manifest's intent filter, so a link aimed at the dev build can only be claimed by the dev build. Flutter hands the router the path and query, so `/stokvels/:id`, `/stokvels/:id/cycles/:cycleId` and `/join/:code` open the same screens as in the app, while it is running and from a cold start. Signed out, the link goes to sign-in and then on to the address.
 
-**dev** (application id `za.co.andiswa.ronditrack.dev`)
+**dev** (application id `za.co.mathabo.ronditrack.dev`)
 
 ```powershell
 # cold start: force-stop first, then open each link
-adb shell am force-stop za.co.andiswa.ronditrack.dev
-adb shell am start -W -a android.intent.action.VIEW -d "ronditrack://za.co.andiswa.ronditrack.dev/stokvels/umoja-family-fund" za.co.andiswa.ronditrack.dev
-adb shell am force-stop za.co.andiswa.ronditrack.dev
-adb shell am start -W -a android.intent.action.VIEW -d "ronditrack://za.co.andiswa.ronditrack.dev/stokvels/umoja-family-fund/cycles/cycle-umoja-5" za.co.andiswa.ronditrack.dev
-adb shell am force-stop za.co.andiswa.ronditrack.dev
-adb shell am start -W -a android.intent.action.VIEW -d "ronditrack://za.co.andiswa.ronditrack.dev/join/ubuntu2026" za.co.andiswa.ronditrack.dev
+adb shell am force-stop za.co.mathabo.ronditrack.dev
+adb shell am start -W -a android.intent.action.VIEW -d "ronditrack://za.co.mathabo.ronditrack.dev/stokvels/umoja-family-fund" za.co.mathabo.ronditrack.dev
+adb shell am force-stop za.co.mathabo.ronditrack.dev
+adb shell am start -W -a android.intent.action.VIEW -d "ronditrack://za.co.mathabo.ronditrack.dev/stokvels/umoja-family-fund/cycles/cycle-umoja-5" za.co.mathabo.ronditrack.dev
+adb shell am force-stop za.co.mathabo.ronditrack.dev
+adb shell am start -W -a android.intent.action.VIEW -d "ronditrack://za.co.mathabo.ronditrack.dev/join/ubuntu2026" za.co.mathabo.ronditrack.dev
 ```
 
-**staging** (application id `za.co.andiswa.ronditrack.staging`)
+**staging** (application id `za.co.mathabo.ronditrack.staging`)
 
 ```powershell
 # cold start: force-stop first, then open each link
-adb shell am force-stop za.co.andiswa.ronditrack.staging
-adb shell am start -W -a android.intent.action.VIEW -d "ronditrack://za.co.andiswa.ronditrack.staging/stokvels/umoja-family-fund" za.co.andiswa.ronditrack.staging
-adb shell am force-stop za.co.andiswa.ronditrack.staging
-adb shell am start -W -a android.intent.action.VIEW -d "ronditrack://za.co.andiswa.ronditrack.staging/stokvels/umoja-family-fund/cycles/cycle-umoja-5" za.co.andiswa.ronditrack.staging
-adb shell am force-stop za.co.andiswa.ronditrack.staging
-adb shell am start -W -a android.intent.action.VIEW -d "ronditrack://za.co.andiswa.ronditrack.staging/join/ubuntu2026" za.co.andiswa.ronditrack.staging
+adb shell am force-stop za.co.mathabo.ronditrack.staging
+adb shell am start -W -a android.intent.action.VIEW -d "ronditrack://za.co.mathabo.ronditrack.staging/stokvels/umoja-family-fund" za.co.mathabo.ronditrack.staging
+adb shell am force-stop za.co.mathabo.ronditrack.staging
+adb shell am start -W -a android.intent.action.VIEW -d "ronditrack://za.co.mathabo.ronditrack.staging/stokvels/umoja-family-fund/cycles/cycle-umoja-5" za.co.mathabo.ronditrack.staging
+adb shell am force-stop za.co.mathabo.ronditrack.staging
+adb shell am start -W -a android.intent.action.VIEW -d "ronditrack://za.co.mathabo.ronditrack.staging/join/ubuntu2026" za.co.mathabo.ronditrack.staging
 ```
 
-**prod** (application id `za.co.andiswa.ronditrack`)
+**prod** (application id `za.co.mathabo.ronditrack`)
 
 ```powershell
 # cold start: force-stop first, then open each link
-adb shell am force-stop za.co.andiswa.ronditrack
-adb shell am start -W -a android.intent.action.VIEW -d "ronditrack://za.co.andiswa.ronditrack/stokvels/umoja-family-fund" za.co.andiswa.ronditrack
-adb shell am force-stop za.co.andiswa.ronditrack
-adb shell am start -W -a android.intent.action.VIEW -d "ronditrack://za.co.andiswa.ronditrack/stokvels/umoja-family-fund/cycles/cycle-umoja-5" za.co.andiswa.ronditrack
-adb shell am force-stop za.co.andiswa.ronditrack
-adb shell am start -W -a android.intent.action.VIEW -d "ronditrack://za.co.andiswa.ronditrack/join/ubuntu2026" za.co.andiswa.ronditrack
+adb shell am force-stop za.co.mathabo.ronditrack
+adb shell am start -W -a android.intent.action.VIEW -d "ronditrack://za.co.mathabo.ronditrack/stokvels/umoja-family-fund" za.co.mathabo.ronditrack
+adb shell am force-stop za.co.mathabo.ronditrack
+adb shell am start -W -a android.intent.action.VIEW -d "ronditrack://za.co.mathabo.ronditrack/stokvels/umoja-family-fund/cycles/cycle-umoja-5" za.co.mathabo.ronditrack
+adb shell am force-stop za.co.mathabo.ronditrack
+adb shell am start -W -a android.intent.action.VIEW -d "ronditrack://za.co.mathabo.ronditrack/join/ubuntu2026" za.co.mathabo.ronditrack
 ```
 
 

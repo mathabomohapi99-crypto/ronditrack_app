@@ -73,7 +73,11 @@ Future<AppHarness> pumpApp(
       retry: appRetry,
       overrides: [
         appConfigProvider.overrideWithValue(
-          AppConfig(flavor: flavor, apiBaseUrl: 'http://localhost'),
+          AppConfig(
+            flavor: flavor,
+            apiBaseUrl: 'http://localhost',
+            refreshCookieName: 'rt',
+          ),
         ),
         homeRepositoryProvider.overrideWith(
           (ref) => FakeHomeRepository(

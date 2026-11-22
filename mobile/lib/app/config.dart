@@ -12,11 +12,16 @@ class ConfigError implements Exception {
 }
 
 class AppConfig {
-  const new({required this.flavor, required this.apiBaseUrl});
+  const new({
+    required this.flavor,
+    required this.apiBaseUrl,
+    required this.refreshCookieName,
+  });
 
   factory fromEnvironment() => AppConfig.resolve(
     flavor: const String.fromEnvironment('FLAVOR'),
     apiBaseUrl: const String.fromEnvironment('API_BASE_URL'),
+    refreshCookieName: const String.fromEnvironment('REFRESH_COOKIE_NAME'),
     nativeFlavor: appFlavor,
   );
 
@@ -25,9 +30,11 @@ class AppConfig {
   factory resolve({
     required String flavor,
     required String apiBaseUrl,
+    required String refreshCookieName,
     required String? nativeFlavor,
   }) {
-    if (flavor.isEmpty || apiBaseUrl.isEmpty) {
+    // UPDATED 11.2: a missing cookie name refuses to start, like a missing base URL
+    if (flavor.isEmpty || apiBaseUrl.isEmpty || refreshCookieName.isEmpty) {
       throw ConfigError(
         'No config. Run with --dart-define-from-file=config/<flavor>.json',
       );
@@ -46,11 +53,18 @@ class AppConfig {
         'Use the config file that matches --flavor.',
       );
     }
-    return AppConfig(flavor: parsed, apiBaseUrl: apiBaseUrl);
+    return AppConfig(
+      flavor: parsed,
+      apiBaseUrl: apiBaseUrl,
+      refreshCookieName: refreshCookieName,
+    );
   }
 
   final Flavor flavor;
   final String apiBaseUrl;
+
+  /// Never typed into code: comes from config/<flavor>.json
+  final String refreshCookieName;
 
   /// Dev-only tools (the persona switcher). Staging and prod build none.
   bool get devToolsEnabled => flavor == Flavor.dev;
