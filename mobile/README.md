@@ -276,3 +276,25 @@ The response types are hand-written (`data/*_dto.dart`) and stop in `data/`. Rea
 - Models: hand-written, see The API client.
 - Timeouts: connect 10 s, send 15 s, receive 30 s. These are NOT yet measured against the API with its database down. Measure before relying on them.
 - Retry: only reads, and only for "no answer", three attempts. Every 4xx is final and writes are never retried. A 500 is not retried. Not yet measured.
+
+
+## Contract notes › Offline, forms and lists (11.3)
+
+API commit read: `49d043f` (API repo). Answers still to be filled from the API code and curl:
+
+1. Idempotency-Key: which writes take it, same key/same body, same key/different body, and M (days the key is kept): TODO.
+2. When a contribution is refused (already paid, cycle closed, not a member), status and words, rate limiting: TODO.
+3. Which records can be edited and how a stale edit is refused (version + 409, or ETag + 412): TODO.
+4. Contributions list: page size, end marker, filters; the date filter is meant as a South African day, half-open (start inclusive, end exclusive): TODO confirm what the API accepts.
+5. 400 error field names, money in cents, dates: TODO.
+6. Personal data a phone must not keep in plain storage (proofs of payment, ID numbers, bank details): TODO. Nothing personal is cached yet.
+
+## Money and dates (11.3)
+
+A South African day is 00:00 SAST up to, but not including, 00:00 SAST the next day (SAST is UTC+2 all year). `lib/core/time/sast_day.dart` turns a day into those UTC bounds and an instant into its South African day. The phone's own time zone is never read. Test: `test/core/sast_day_test.dart` (the 00:30 SAST contribution is on 1 November).
+
+## Offline, languages, decisions (11.3)
+
+Status: in progress. Packages added and pinned: drift 2.35.3, drift_flutter 0.3.1, shared_preferences 2.5.6, uuid 4.6.0 (UUIDs from the uuid package), intl 0.20.3, drift_dev 2.35.2, flutter_localizations (SDK).
+Lock-file check on 23 November found five packages under two weeks old: cli_util 0.6.1, jni 1.2.1, jni_flutter 1.1.0, material_ui 1.11.0, shared_preferences_android 2.5.5. They need `dependency_overrides` to their newest older versions, each with a date to remove it. Not done yet.
+Not done yet: Drift cache and age banner, outbox with a stored idempotency key and maximum age, contributions list, ARB files and second language (reviewer to be named), accessibility checks, live tests, and the tests-seen-to-fail evidence.
