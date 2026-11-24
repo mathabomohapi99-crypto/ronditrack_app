@@ -22,6 +22,9 @@ class AppLocalizationsAf extends AppLocalizations {
   String get payButton => 'Betaal';
 
   @override
+  String get payClose => 'Maak toe';
+
+  @override
   String payPending(String amount) {
     return 'Hangend: $amount';
   }
@@ -34,6 +37,24 @@ class AppLocalizationsAf extends AppLocalizations {
 
   @override
   String get payErrorInvalid => 'Dit is nie ’n geldbedrag nie.';
+
+  @override
+  String get payDone => 'Betaling gestuur.';
+
+  @override
+  String get payQueued => 'Gestoor. Dit word gestuur sodra jy ’n sein het.';
+
+  @override
+  String payWaiting(int seconds) {
+    return 'Te veel pogings. Wag $seconds sekondes.';
+  }
+
+  @override
+  String get payRefusedGeneric => 'Die betaling is geweier.';
+
+  @override
+  String get payExpired =>
+      'Hierdie betaling het te lank gewag en is nie gestuur nie. Kyk jou betalings na en betaal weer as jy moet.';
 
   @override
   String get statusPaid => 'Betaal';

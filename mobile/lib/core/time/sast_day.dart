@@ -24,3 +24,11 @@ DateTime sastDayOf(DateTime instant) {
   final shifted = instant.toUtc().add(sastOffset);
   return DateTime.utc(shifted.year, shifted.month, shifted.day);
 }
+
+/// An instant the way the API wants it: UTC, no fractions, like 2026-09-30T22:00:00Z.
+String apiInstant(DateTime instant) {
+  final u = instant.toUtc();
+  String two(int n) => n.toString().padLeft(2, '0');
+  final year = u.year.toString().padLeft(4, '0');
+  return '$year-${two(u.month)}-${two(u.day)}T${two(u.hour)}:${two(u.minute)}:${two(u.second)}Z';
+}

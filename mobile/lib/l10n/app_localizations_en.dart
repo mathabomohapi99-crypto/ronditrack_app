@@ -22,6 +22,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get payButton => 'Pay';
 
   @override
+  String get payClose => 'Close';
+
+  @override
   String payPending(String amount) {
     return 'Pending: $amount';
   }
@@ -34,6 +37,24 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get payErrorInvalid => 'That is not an amount of money.';
+
+  @override
+  String get payDone => 'Payment sent.';
+
+  @override
+  String get payQueued => 'Saved. It will be sent when you have signal.';
+
+  @override
+  String payWaiting(int seconds) {
+    return 'Too many attempts. Waiting $seconds seconds.';
+  }
+
+  @override
+  String get payRefusedGeneric => 'The payment was refused.';
+
+  @override
+  String get payExpired =>
+      'This payment waited too long and was not sent. Check your payments and pay again if you need to.';
 
   @override
   String get statusPaid => 'Paid';

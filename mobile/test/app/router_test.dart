@@ -79,7 +79,10 @@ void main() {
       expect(find.text('Sign in to open the link you followed.'), findsOne);
       expect(find.text('Invitation'), findsNothing);
 
-      await tester.enterText(find.byType(TextField), 'nomsa@example.com');
+      await tester.enterText(
+        find.byKey(const Key('email-field')),
+        'nomsa@example.com',
+      );
       await tester.tap(find.byKey(const Key('sign-in-button')));
       await tester.pumpAndSettle();
 

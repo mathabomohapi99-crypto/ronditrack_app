@@ -122,6 +122,12 @@ abstract class AppLocalizations {
   /// **'Pay'**
   String get payButton;
 
+  /// No description provided for @payClose.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get payClose;
+
   /// No description provided for @payPending.
   ///
   /// In en, this message translates to:
@@ -145,6 +151,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'That is not an amount of money.'**
   String get payErrorInvalid;
+
+  /// No description provided for @payDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment sent.'**
+  String get payDone;
+
+  /// No description provided for @payQueued.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved. It will be sent when you have signal.'**
+  String get payQueued;
+
+  /// No description provided for @payWaiting.
+  ///
+  /// In en, this message translates to:
+  /// **'Too many attempts. Waiting {seconds} seconds.'**
+  String payWaiting(int seconds);
+
+  /// No description provided for @payRefusedGeneric.
+  ///
+  /// In en, this message translates to:
+  /// **'The payment was refused.'**
+  String get payRefusedGeneric;
+
+  /// No description provided for @payExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'This payment waited too long and was not sent. Check your payments and pay again if you need to.'**
+  String get payExpired;
 
   /// No description provided for @statusPaid.
   ///

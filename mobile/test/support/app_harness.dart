@@ -4,6 +4,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:ronditrack/app/config.dart';
 import 'package:ronditrack/app/config_provider.dart';
 import 'package:ronditrack/app/retry.dart';
+import 'package:ronditrack/core/database/app_database.dart';
+import 'package:ronditrack/features/payments/application/outbox_providers.dart';
+import 'package:ronditrack/l10n/app_localizations.dart';
 import 'package:ronditrack/app/router.dart';
 import 'package:ronditrack/core/session/session.dart';
 import 'package:ronditrack/core/theme/app_theme.dart';
@@ -79,6 +82,9 @@ Future<AppHarness> pumpApp(
             refreshCookieName: 'rt',
           ),
         ),
+        pendingPaymentsProvider.overrideWith(
+          (ref) => Stream.value(const <OutboxPayment>[]),
+        ),
         homeRepositoryProvider.overrideWith(
           (ref) => FakeHomeRepository(
             personaId: ref.watch(currentPersonaProvider),
@@ -115,6 +121,8 @@ Future<AppHarness> pumpApp(
           theme: buildTheme(Brightness.light),
           darkTheme: buildTheme(Brightness.dark),
           routerConfig: ref.watch(routerProvider),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
           builder: (context, child) => MediaQuery(
             data: MediaQuery.of(context)
                 .copyWith(textScaler: TextScaler.linear(textScale)),
