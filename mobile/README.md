@@ -303,3 +303,54 @@ Outbox: a payment is stored in Drift with its Idempotency-Key at the tap; maximu
 ## Assignment 11.3 status (what is left)
 Done: Drift database, outbox with a key made at the tap and stored with the payment, maximum age 24 h (API key lifetime M is 168 h), pay form with rands to cents and errors under the field, South African day bounds, two languages (English and Afrikaans), the five package overrides, and tests for the outbox and the day bounds.
 Left: sign-out emptying the database and asking first when a payment is waiting; Drift cache for Home and the stokvel with the last-updated banner; contributions list with paging and the six states; refreshing the stokvel after a payment; the failing payouts "loading" test; Afrikaans review by a first-language speaker; live tests, screenshots, TalkBack and the CI time-zone runs.
+
+## Test plan (12.1)
+
+Rules that cost a member money or privacy if they break, and the test that proves each:
+
+| # | Rule | Test |
+|---|---|---|
+| 1 | One refresh for many expired requests | TODO: session interceptor test with a scripted adapter |
+| 2 | No signal never signs anyone out | TODO: session interceptor test |
+| 3 | One tap makes one key | `test/payments/outbox_service_test.dart`: one tap makes one key |
+| 4 | Every attempt sends the same key | `test/payments/outbox_service_test.dart`: the same key is sent on every attempt; `test/payments/outbox_server_test.dart`: a retry after no answer |
+| 5 | The key survives a restart | `outbox_service_test.dart`: the key survives a restart; `outbox_server_test.dart`: killed mid-request (a temporary file, reopened) |
+| 6 | The outbox maximum age is shorter than the API's M | `outbox_service_test.dart`: shorter than M; after the maximum age it is never sent again |
+| 7 | Sign-out empties the outbox | `outbox_service_test.dart`: sign-out empties the outbox |
+| 8 | A 429 waits for Retry-After with the same key | `outbox_server_test.dart`: a 429 keeps the key |
+| 9 | A 409 leaves the outbox and says why | `outbox_server_test.dart`: a 409 leaves the outbox |
+| 10 | A South African day is 00:00 to 00:00 SAST | `test/core/sast_day_test.dart`, `test/core/api_instant_test.dart` |
+| 11 | Rands become cents without a double | `test/core/money_test.dart` |
+| 12 | Nothing personal reaches Sentry | `test/privacy/scrubber_test.dart` |
+| 13 | Analytics carry ids only | `test/privacy/analytics_test.dart` |
+
+Outbox answers (question 2): success removes the payment; a repeat with the same key returns the stored answer and removes it; 409 (already paid or not a member), 404, 403, 422 and 400 remove it and show the reason; 429 keeps it and its key and waits for Retry-After; no answer, a failed sign-in and a 5xx keep it and its key.
+
+Layers (question 3): unit and widget tests run in CI. Integration (emulator), live tests, TalkBack and timings on a real phone run on my laptop only.
+Coverage (question 4): today's number and the floor are written by `dart run tool/check_coverage.dart --write-floor`; generated code and translations are left out. Number: TODO.
+Journey (question 5): sign in, record a contribution, see it on the cycle, outbox empty afterwards. Status: TODO.
+What the tests cannot see (question 9): a real TalkBack walk-through (done by hand), the real API (live tests), another platform (only Android is built), timings on a cheap phone (profile mode on a real phone).
+
+## Privacy (12.1)
+
+Everything that leaves the phone apart from the API calls:
+
+| What | Where | Fields | Could it identify a member? |
+|---|---|---|---|
+| Error reports | Sentry (servers outside South Africa), only when a DSN is passed | Exception type and message, stack trace, breadcrumbs, environment (flavour), the API's correlation id as a tag, app id, version and build number, device model and OS version | Not after the scrubber: names, emails, amounts, tokens, proof file names and query strings are removed (`lib/core/privacy/scrubber.dart`); `sendDefaultPii` is false; the user is replaced by a constant |
+| Sentry session data | Sentry, on launch | Session start and end, release, environment | No member data |
+| Analytics events | Not sent anywhere yet; the interface only allows `stokvelId` and `memberId` | Event name, stokvel id, member id | An id could identify a member to someone who also has the API's data, so it is treated as personal |
+| Logs | Stay on the phone (debug builds only, no tokens) | Request line without tokens | Not sent |
+
+Failures worth a report (question 7): server failures (5xx) and failures nobody planned for. Not reported because they are the app working as designed: no signal, validation (400/422), not found, forbidden, rate limited, an already-paid refusal, a refused refresh. The API puts its correlation id in `ProblemDetails.correlationId`; it goes to Sentry as the tag `correlation_id`.
+Reporting happens through one `ErrorReporter` (`lib/core/privacy/error_reporter.dart`); no screen reports on its own. Wiring every failure through it: TODO.
+
+Android versions (question 8): `minSdk` was `flutter.minSdkVersion` (24); it is now 26 because Sentry 10 needs Android 8.0. Phones on Android 7.x can no longer install the app. I have not measured which versions my members use: TODO.
+
+## Running the tests (12.1)
+
+- Everything: `flutter test`
+- Coverage: `flutter test --coverage` then `dart run tool/check_coverage.dart`
+- Set the floor from today's number: `dart run tool/check_coverage.dart --write-floor`
+- Date tests in both zones (Linux or macOS): `TZ=UTC flutter test` and `TZ=Africa/Johannesburg flutter test`
+- Run with Sentry on: add `--dart-define=SENTRY_DSN=<your dsn>` after `--dart-define-from-file`

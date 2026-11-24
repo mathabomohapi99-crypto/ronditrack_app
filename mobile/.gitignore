@@ -50,3 +50,6 @@ app.*.map.json
 # Generated code is built in CI, not committed (see README)
 *.g.dart
 *.freezed.dart
+
+# alchemist writes failed golden pictures here
+**/failures/
