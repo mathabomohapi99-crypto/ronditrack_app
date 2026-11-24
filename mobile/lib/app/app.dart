@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ronditrack/app/config.dart';
 import 'package:ronditrack/app/router.dart';
+import 'package:ronditrack/core/settings/locale_choice.dart';
+import 'package:ronditrack/l10n/app_localizations.dart';
 import 'package:ronditrack/core/theme/app_theme.dart';
 
 class RondiTrackApp extends ConsumerWidget {
@@ -18,6 +20,9 @@ class RondiTrackApp extends ConsumerWidget {
       theme: buildTheme(Brightness.light),
       darkTheme: buildTheme(Brightness.dark),
       routerConfig: ref.watch(routerProvider),
+      locale: ref.watch(localeChoiceProvider),
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
     );
   }
 }

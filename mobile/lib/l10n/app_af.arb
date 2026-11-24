@@ -1,0 +1,19 @@
+{
+  "@@locale": "af",
+  "payTitle": "Betaal bydrae",
+  "payAmountLabel": "Bedrag (rand)",
+  "payAmountHint": "Byvoorbeeld 250,00",
+  "payButton": "Betaal",
+  "payPending": "Hangend: {amount}",
+  "payErrorEmpty": "Voer ’n bedrag in.",
+  "payErrorTooManyDecimals": "Gebruik hoogstens twee desimale.",
+  "payErrorInvalid": "Dit is nie ’n geldbedrag nie.",
+  "statusPaid": "Betaal",
+  "statusPending": "Hangend",
+  "statusLate": "Laat",
+  "memberCount": "{count, plural, =0{Geen lede} one{1 lid} other{{count} lede}}",
+  "languageLabel": "Taal",
+  "languageEnglish": "Engels",
+  "languageAfrikaans": "Afrikaans",
+  "languagePhone": "Volg die foon"
+}

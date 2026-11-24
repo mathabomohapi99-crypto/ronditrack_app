@@ -282,10 +282,10 @@ The response types are hand-written (`data/*_dto.dart`) and stop in `data/`. Rea
 
 API commit read: `49d043f` (API repo). Answers still to be filled from the API code and curl:
 
-1. Idempotency-Key: which writes take it, same key/same body, same key/different body, and M (days the key is kept): TODO.
+1. Idempotency-Key: required (a missing key is a 400) when recording a contribution (scoped to the caller and the stokvel) and when closing a cycle (scoped to the caller and the cycle). The same key and body returns the first response unchanged with `Idempotency-Replayed: true`. The same key with a different body is refused as an idempotency conflict (status to confirm with curl). M is `Housekeeping:IdempotencyRetentionHours`, 168 hours (7 days) by default. The outbox keeps a payment at most 24 hours, shorter than M.
 2. When a contribution is refused (already paid, cycle closed, not a member), status and words, rate limiting: TODO.
 3. Which records can be edited and how a stale edit is refused (version + 409, or ETag + 412): TODO.
-4. Contributions list: page size, end marker, filters; the date filter is meant as a South African day, half-open (start inclusive, end exclusive): TODO confirm what the API accepts.
+4. Contributions list: `GET /api/v1/stokvels/{id}/contribution-history` returns `{ items, nextPageToken }`; an empty `nextPageToken` means the end. Filters: `member`, `from`, `to`, `sort` (newest or oldest). `from` and `to` need a time (a date alone is a 400), so they are instants: the app sends the UTC bounds of a South African day. A page token only works with the same filters, so a filter change starts again with no token. Largest page size, cycle and status filters, and whether `to` is inclusive: TODO.
 5. 400 error field names, money in cents, dates: TODO.
 6. Personal data a phone must not keep in plain storage (proofs of payment, ID numbers, bank details): TODO. Nothing personal is cached yet.
 
@@ -298,3 +298,5 @@ A South African day is 00:00 SAST up to, but not including, 00:00 SAST the next 
 Status: in progress. Packages added and pinned: drift 2.35.3, drift_flutter 0.3.1, shared_preferences 2.5.6, uuid 4.6.0 (UUIDs from the uuid package), intl 0.20.3, drift_dev 2.35.2, flutter_localizations (SDK).
 Lock-file check on 23 November found five packages under two weeks old: cli_util 0.6.1, jni 1.2.1, jni_flutter 1.1.0, material_ui 1.11.0, shared_preferences_android 2.5.5. They need `dependency_overrides` to their newest older versions, each with a date to remove it. Not done yet.
 Not done yet: Drift cache and age banner, outbox with a stored idempotency key and maximum age, contributions list, ARB files and second language (reviewer to be named), accessibility checks, live tests, and the tests-seen-to-fail evidence.
+Languages: English and Afrikaans, through ARB files and gen-l10n (`lib/l10n`). The Afrikaans is a machine-written draft and has NOT been reviewed by a first-language speaker yet. Reviewer and what they changed: TODO. The language choice is kept in SharedPreferences.
+Outbox: a payment is stored in Drift with its Idempotency-Key at the tap; maximum age 24 hours, API key lifetime M 168 hours. Keys come from the uuid package (v4).

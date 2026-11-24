@@ -1,0 +1,21 @@
+{
+  "@@locale": "en",
+  "payTitle": "Pay contribution",
+  "payAmountLabel": "Amount (rands)",
+  "payAmountHint": "For example 250,00",
+  "payButton": "Pay",
+  "payPending": "Pending: {amount}",
+  "@payPending": { "placeholders": { "amount": { "type": "String" } } },
+  "payErrorEmpty": "Enter an amount.",
+  "payErrorTooManyDecimals": "Use at most two decimals.",
+  "payErrorInvalid": "That is not an amount of money.",
+  "statusPaid": "Paid",
+  "statusPending": "Pending",
+  "statusLate": "Late",
+  "memberCount": "{count, plural, =0{No members} one{1 member} other{{count} members}}",
+  "@memberCount": { "placeholders": { "count": { "type": "int" } } },
+  "languageLabel": "Language",
+  "languageEnglish": "English",
+  "languageAfrikaans": "Afrikaans",
+  "languagePhone": "Follow the phone"
+}

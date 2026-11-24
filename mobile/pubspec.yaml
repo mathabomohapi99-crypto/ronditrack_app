@@ -43,3 +43,10 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  generate: true
+
+dependency_overrides:
+  cli_util: 0.6.0 # remove after 2026-12-04
+  jni: 1.1.2 # remove after 2026-12-03
+  jni_flutter: 1.0.4+1 # remove after 2026-12-03
+  shared_preferences_android: 2.5.4 # remove after 2026-11-25
