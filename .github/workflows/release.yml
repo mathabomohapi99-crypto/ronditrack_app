@@ -1,0 +1,49 @@
+# NEW 12.2: a release, started by a v* tag. Separate from the CI checks: this job holds the signing key
+name: Release
+on:
+  push:
+    tags: ['v*']
+permissions:
+  contents: read
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4.2.2
+      - uses: actions/setup-java@v4.7.1
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: subosito/flutter-action@v2.18.0
+        with:
+          flutter-version: 3.47.7
+      - name: Secrets go into the runner's temporary folder, which is thrown away
+        shell: bash
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          FIREBASE_STAGING: ${{ secrets.FIREBASE_CONFIG_STAGING }}
+          FIREBASE_PROD: ${{ secrets.FIREBASE_CONFIG_PROD }}
+        run: |
+          echo "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/upload.jks"
+          cat > mobile/android/key.properties <<EOF
+          storePassword=$KEYSTORE_PASSWORD
+          keyPassword=$KEYSTORE_PASSWORD
+          keyAlias=upload
+          storeFile=$RUNNER_TEMP/upload.jks
+          EOF
+          if [ -n "$FIREBASE_STAGING" ]; then echo "$FIREBASE_STAGING" > mobile/config/firebase.staging.json; fi
+          if [ -n "$FIREBASE_PROD" ]; then echo "$FIREBASE_PROD" > mobile/config/firebase.prod.json; fi
+      - run: flutter pub get
+        working-directory: mobile
+      - run: dart run build_runner build
+        working-directory: mobile
+      - name: Build, sign and check the signature
+        shell: pwsh
+        working-directory: mobile
+        run: ./tool/release.ps1 -Tag "${{ github.ref_name }}" -BuildNumber ${{ github.run_number }}
+      # TODO next: symbols to Sentry (SENTRY_RELEASE and SENTRY_DIST must match what the app reports) and the staging APK to App Distribution
+      - uses: actions/upload-artifact@v4.6.2
+        with:
+          name: release-${{ github.ref_name }}
+          path: mobile/release-out/

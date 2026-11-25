@@ -354,3 +354,42 @@ Android versions (question 8): `minSdk` was `flutter.minSdkVersion` (24); it is 
 - Set the floor from today's number: `dart run tool/check_coverage.dart --write-floor`
 - Date tests in both zones (Linux or macOS): `TZ=UTC flutter test` and `TZ=Africa/Johannesburg flutter test`
 - Run with Sentry on: add `--dart-define=SENTRY_DSN=<your dsn>` after `--dart-define-from-file`
+
+## Notifications (12.2)
+
+1. Who is told: the member whose contribution a treasurer confirmed. Also planned: members when a cycle is closed or a payout recorded. The API decides who, from its own data, and sends AFTER the change is saved; a failed push never fails the confirmation. Status: the API part is TODO (it is a separate pull request in the API repo).
+2. Every field of a push:
+
+| Field | Value | Who can read it |
+|---|---|---|
+| Title | `RondiTrack` | lock screen, Google's servers, phone logs |
+| Body | `There is an update on your stokvel.` | lock screen, Google's servers, phone logs |
+| data.type | `contribution_confirmed`, `cycle_closed` or `payout_recorded` | Google's servers, the app |
+| data.stokvelId, data.cycleId | plain ids | Google's servers, the app |
+
+   No name, no amount, no stokvel name and no decision. The channel `updates` has private lock-screen visibility.
+3. What the app does with a push (each row is a test, TODO): in front the app shows it itself and fetches the cycle again; in the background a tap opens the cycle; closed, the tap is read before the first frame and the router starts there; signed out, the member signs in and then lands on that cycle; signed in as someone who is not a member, they see not found. `routeForPush` (`lib/core/push/push_route.dart`) accepts only a known type and plain ids.
+4. Asking: in the app's own words first, just after a member records a payment, once per phone (`NotificationAsk`, kept in SharedPreferences so sign-out does not reset it). Not now means never asked again. After two refusals Android stops showing its dialog.
+5. Proof photos: upright, longest side 1600 px, JPEG at quality 85, 75, 65, 55, 45 until under the API's limit, all EXIF (GPS too) cleared. The API's limit and accepted types: TODO (the API has no proof upload yet).
+
+Run with your own Firebase file: copy `config/firebase.example.json` to `config/firebase.<flavour>.json`, fill the four values, and add `--dart-define-from-file=config/firebase.<flavour>.json` after the flavour file. With no file push is off; with some values but not all the app refuses to start.
+
+## Releases (12.2)
+
+6. Secrets (repository secrets, never in the repo): `KEYSTORE_BASE64`, `KEYSTORE_PASSWORD`, `FIREBASE_CONFIG_STAGING`, `FIREBASE_CONFIG_PROD`, the App Distribution service account key, the Sentry auth token. Settings (repository variables or files in the repo): the API address, the Sentry DSNs, the certificate fingerprint, `config/<flavour>.json`.
+7. The version name comes from the git tag (`vX.Y.Z`), the build number from the CI run number; `pubspec.yaml`'s version line is not edited. A tester's phone refuses a lower build number (`INSTALL_FAILED_VERSION_DOWNGRADE`) and a different key (`INSTALL_FAILED_UPDATE_INCOMPATIBLE`).
+8. A reviewer's phone reaches the API through a tunnel or a deployment over HTTPS: TODO (address, forwarded headers and the sign-in limit). `10.0.2.2` only works on the emulator.
+
+Make a release: `pwsh tool/release.ps1 -Tag v1.0.0`. It refuses without `android/key.properties`, and refuses any build whose certificate is not the upload key's. On CI a `v*` tag starts `.github/workflows/release.yml`.
+
+## What isn't tested (12.2)
+
+A real push arriving, a lock screen, a second phone, iOS and the stores cannot be proved in CI. They are checked by hand on a real phone with a real confirmation, and the screenshots are in the pull request. TODO.
+
+## The stores (12.2)
+
+With a Google Play Console account: Play App Signing would hold the real signing key, so a lost upload key can be reset instead of locking every tester out; I would ship the app bundle (`.aab`) and use the internal testing track first. With an Apple Developer Program membership: signing certificates and provisioning profiles, APNs for iOS push, and TestFlight for testers. Neither account is needed here.
+
+## Decisions (12.2)
+
+Channel `updates`, private on the lock screen. Image size 1600 px, qualities 85 down to 45. Android `compileSdk` 37 with core library desugaring (needed by flutter_local_notifications 23). Tunnel or deployment: TODO.

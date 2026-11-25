@@ -53,3 +53,13 @@ app.*.map.json
 
 # alchemist writes failed golden pictures here
 **/failures/
+
+# secrets: never commit (keystore, its properties, Firebase files, service account keys)
+*.jks
+*.keystore
+**/key.properties
+config/firebase.*.json
+!config/firebase.example.json
+**/service-account*.json
+secrets/
+release-out/

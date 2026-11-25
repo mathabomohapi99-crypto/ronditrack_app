@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:ronditrack/core/app_version.dart';
 import 'package:ronditrack/core/session/session.dart';
 import 'package:ronditrack/features/auth/application/auth_flow.dart';
 
@@ -19,6 +20,7 @@ class ProfileScreen extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const VersionLabel(),
             const Text('Signed in as'),
             Text(name, style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 16),
